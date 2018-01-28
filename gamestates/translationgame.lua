@@ -104,11 +104,36 @@ function TranslationGame:draw()
           self.terminal:setFontColor(Color.WHITE)
           CURRENT_GAMESTATE = "battlescreen"
           dmg = self.bs.player:dealDamage() * 2
+          table.insert(self.bs.hud.messages, 2, "BONUS DAMAGE!")
           message2 = "You deal " .. dmg .. " damage! ..."
-          table.insert(self.bs.hud.messages, 2, message2)
+          table.insert(self.bs.hud.messages, 3, message2)
           self.bs.enemy_list[self.bs.currentEnemy]:takeDamage(dmg)
+          if(self.bs.enemy_list[self.bs.currentEnemy]:isDead()) then
+            self.bs.hud:queueMessage(self.bs.enemy_list[self.bs.currentEnemy].name .. " is defeated!")
+          end
+          
+          for i, v in ipairs(self.bs.enemy_list) do
+        
+            if(v:getHP() > 0) then
+              message1 = v.name .. " attacks!"
+              message2 = v.name .. " deals "  .. self.bs.player:dealDamage() .. " damage! ..."
+              
+              self.bs.hud:queueMessage(message1)
+              self.bs.hud:queueMessage(message2)
+              
+              self.bs:battle(v, self.bs.player)
+              print(self.bs.player:getHP())
+            end
+            
+            if(i == #self.bs.enemy_list and v:getHP() <= 0) then
+                self.bs.hud:queueMessage("All enemies defeated!")
+                self.bs.hud:queueMessage("You win!")
+             end
+          end
+          
           self.win = false
       end
+          
     elseif self.lose==true then
       self.terminal:setEditable(false)
       self.terminal:setFontColor(Color.RED)
@@ -131,7 +156,34 @@ function TranslationGame:draw()
           message2 = "You deal " .. dmg .. " damage! ..."
           table.insert(self.bs.hud.messages, 2, message2)
           self.bs.enemy_list[self.bs.currentEnemy]:takeDamage(dmg)
+          
+          if(self.bs.enemy_list[self.bs.currentEnemy]:isDead()) then
+            self.bs.hud:queueMessage(self.bs.enemy_list[self.bs.currentEnemy].name .. " is defeated!")
+          end
+          
+          for i, v in ipairs(self.bs.enemy_list) do
+        
+            if(v:getHP() > 0) then
+              message1 = v.name .. " attacks!"
+              message2 = v.name .. " deals "  .. self.bs.player:dealDamage() .. " damage! ..."
+              
+              self.bs.hud:queueMessage(message1)
+              self.bs.hud:queueMessage(message2)
+              
+              self.bs:battle(v, self.bs.player)
+              print(self.bs.player:getHP())
+            end
+            
+            if(i == #self.bs.enemy_list and v:getHP() <= 0) then
+                self.bs.hud:queueMessage("All enemies defeated!")
+                self.bs.hud:queueMessage("You win!")
+             end
+          end
+          
           self.lose = false
+          
+          
+          
         end
         
     end

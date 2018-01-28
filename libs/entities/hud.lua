@@ -208,6 +208,11 @@ function HUD:hasQueue()
 end
 
 function HUD:dequeueMessage()
+  if(self.messages[1] == "You win!") then
+    love.event.push("quit")
+  elseif(#self.messages == 1) then
+    self:deselectItem()
+  end
   table.remove(self.messages, 1)
 end
 

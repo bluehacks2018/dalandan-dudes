@@ -27,6 +27,28 @@ size50 = love.graphics.newFont(50)
 --- x and y are in terms of tiles, not actual positions on screen
 function BattleScreen:enter()
   CURRENT_GAMESTATE = "battlescreen"
+  math.randomseed(os.time())
+  battleType = math.random(1,3)
+  
+  local waves = {
+  
+    {
+      Enemy(80, "Stranger"),
+      Enemy(330, "Person"),
+      Enemy(580, "Stranger")
+    },
+    
+    {
+      Enemy(200, "Stranger"),
+      Enemy(450, "Person")
+    },
+    
+    {
+      Enemy(325, "Person")
+    }
+  
+  }
+  
   love.keyboard.setKeyRepeat(true)
   
   self.currentEnemy = 0
@@ -34,9 +56,8 @@ function BattleScreen:enter()
   
   translationGame = TranslationGame(self)
   
-  local stranger1 = Enemy(200, "Stranger")
-  local stranger2 = Enemy(450, "Stranger")
-  self.enemy_list = {stranger1, stranger2}
+  
+  self.enemy_list = waves[battleType]
   
   self.player = Player(INITIAL_PLAYER.hp, INITIAL_PLAYER.atk)
   
@@ -55,13 +76,26 @@ function BattleScreen:draw()
     end
   end
   translationGame:getWords("tag","ceb", 1)
-  translationGame:setLang("tag")
+  translationGame:setLang("ceb")
   translationGame:draw()
 end
 
 --- Updates every frame.
 -- @param dt The delta time or time since the last frame
 function BattleScreen:update(dt) 
+  local hasEnemy = true
+  for i, v in pairs(self.enemy_list) do
+    if(v:getHP() > 0) then 
+      hasEnemy = true 
+      break
+    end 
+  end
+  
+  if(not hasEnemy) then
+    self.hud:queueMessage("ALL ENEMIES DEFEATED!!!")
+    self.hud:queueMessage("YOU WIN!")
+  end
+  
   self.hud:update(dt)
   -- hud:getAction() returns a table with values that are parsed to get an action
   playerCommand = self.hud:getAction()
@@ -77,21 +111,18 @@ function BattleScreen:update(dt)
       self.currentEnemy=  playerCommand[2]
       
       
-    
-      if(self.enemy_list[playerCommand[2]]:isDead()) then
-        self.hud:queueMessage(self.enemy_list[playerCommand[2]].name.. " is defeated!")
-      end
-      
       for i, v in ipairs(self.enemy_list) do
         
-        message1 = v.name .. " attacks!"
-        message2 = v.name .. " deals "  .. self.player:dealDamage() .. " damage! ..."
-        
-        self.hud:queueMessage(message1)
-        self.hud:queueMessage(message2)
-        
-        self:battle(v, self.player)
-        print(self.player:getHP())
+        if(v:getHP() > 0) then
+          message1 = v.name .. " attacks!"
+          message2 = v.name .. " deals "  .. self.player:dealDamage() .. " damage! ..."
+          
+          self.hud:queueMessage(message1)
+          self.hud:queueMessage(message2)
+          
+          self:battle(v, self.player)
+          print(self.player:getHP())
+        end
       end
       
       self.enemy_list[playerCommand[2]]:draw()

@@ -8,7 +8,7 @@ local BattleScreen = require "gamestates.battlescreen"
 --- CONSTANTS
 local SCREEN_WIDTH = 800
 local SCREEN_HEIGHT = 600
-local TITLE = "Blue Hacks"
+local TITLE = "Wika Warrior"
 
 CURRENT_GAMESTATE = "main"
 

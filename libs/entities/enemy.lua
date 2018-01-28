@@ -9,7 +9,8 @@ local Enemy = Class{
 }
 
 local Enemies = {
-  Stranger = {hp = 20, atk = 2}
+  Person= {hp = 20, atk = 2},
+  Stranger = {hp = 35, atk = 4}
 }
 
 function Enemy:init(x, name)
