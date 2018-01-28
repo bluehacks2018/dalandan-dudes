@@ -110,20 +110,7 @@ function BattleScreen:update(dt)
       
       self.currentEnemy=  playerCommand[2]
       
-      
-      for i, v in ipairs(self.enemy_list) do
-        
-        if(v:getHP() > 0) then
-          message1 = v.name .. " attacks!"
-          message2 = v.name .. " deals "  .. self.player:dealDamage() .. " damage! ..."
-          
-          self.hud:queueMessage(message1)
-          self.hud:queueMessage(message2)
-          
-          self:battle(v, self.player)
-          print(self.player:getHP())
-        end
-      end
+
       
       self.enemy_list[playerCommand[2]]:draw()
       self.hud:completeAction()
