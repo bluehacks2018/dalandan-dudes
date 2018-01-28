@@ -2,6 +2,8 @@
 local Class = require "libs.hump.class"
 local Color = require "libs.colors"
 
+local sound = love.audio.newSource("media/sounds/select.wav")
+
 --- Instantiation
 local HUD = Class{}
 local main_font = love.graphics.newFont("media/fonts/consola.ttf", 25)
@@ -220,14 +222,18 @@ function HUD:keypressed(key)
   if(key == "z" and #self.messages > 0 and CURRENT_GAMESTATE == "battlescreen") then
     self:dequeueMessage()
     love.graphics.setColor(Color.WHITE)
+    love.audio.play(sound, "static")
   elseif(self.displaying) then
     
   elseif(key == "up") then
+    love.audio.play(sound, "static")
     self:moveCursor(-1)
   elseif(key == "down") then
     self:moveCursor(1)
+    love.audio.play(sound, "static")
   elseif(key == "z" or key == "return") then
     self:selectItem()
+    love.audio.play(sound, "static")
   elseif(key == "x" or key == "backspace") then
     self:deselectItem()
   end
